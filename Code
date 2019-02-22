@@ -1,0 +1,66 @@
+Sub StockAnalysis()
+
+    'loop through each worksheet
+    For Each ws In Worksheets
+    
+        'create variable to hold ticker name
+        Dim ticker As String
+        
+        'create a variable to hold volume
+        Dim volume As Long
+        volume = 0
+        
+        'create a summary_table variable
+        Dim summary_table As Integer
+        summary_table = 2
+        
+        'create lastrow variable to determine lastrow in stock data
+        Dim lastrow As Long
+        lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    
+       'loop through stock data
+        For i = 2 To lastrow
+    
+            'Name the Summary table headings
+            ws.Range("I1").Value = "Ticker Symbol"
+           
+            ws.Range("J1").Value = "Total Volume"
+            
+            
+            'check if we are still looping through the same ticker name
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+    
+                'set ticker name
+                ticker = ws.Cells(i, 1).Value
+    
+                'add the volume
+                volume = volume + ws.Cells(i, 3).Value
+    
+                'print the ticker name in summary table
+                ws.Range("I" & summary_table).Value = ticker
+    
+                'print the volume in summary table
+                ws.Range("J" & summary_table).Value = volume
+    
+                'move to the next row on the summary table
+                summary_table = summary_table + 1
+    
+                'reset the volume
+                volume = 0
+                
+             'if the next cell is the same ticker
+            Else
+    
+                'add the volume to the ticker's volume
+                volume = volume + ws.Cells(i, 3).Value
+    
+            End If
+    
+        Next i
+        
+        'autofit the columns on the worksheet
+        ws.Columns("A:U").AutoFit
+        
+    Next ws
+
+End Sub
